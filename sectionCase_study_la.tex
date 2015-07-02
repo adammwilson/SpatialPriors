@@ -1,0 +1,58 @@
+\section{Case study}
+\label{sec:lela} 
+
+All examples use Lepidocolaptes lacrymigerenv (LELA) data from Andes. We use this case study to illustrate how Minxent predictions are affected by different modeling decisions and attributes of the data. The data consist of (1) 374 presence observations (2) xx nondetections from the ebird database (Ref?), and (3) an expert map based on ?? from ???. Notably, only 54\% of presences fall within the expert map. However many are nearby; for example extending the expert range boundary by 150(?) km, which has been estimated as the typical resolution of expert maps (Hurlbert and Jetz 2007), results in 9x\% of presences falling within the expert map. The LELA data provide a good example of an expert map that can be considerably improved with additional presence data. 
+
+
+For all tests, we used a relatively simplified version of settings in the Maxent software package (Phillips et al. 2006). We allowed only linear, quadratic and product features for four covariates: LIST. We turned off regularization, removed duplicate presences in the same cell, and turned off clamping during model projections. We used 5-fold cross-validation to assess model performance. All other settings were left at default values. Continuous predictions were assessed with both the presence/absence data and presence/background data using AUC and the point biserial correlation. The point biserial correlation showed no qualitative differences from the AUC, so we do not report it. We chose to evaluate against both absence and background data because the absences are inferred from checklist locations very near presence locations and seem more likely to represent nondetections than true absences. Binary predictions were assessed using the true positive rate (\% presences correct; TPR), true negative rate (\% absences correct; TNR), and correct classification rate (\% presences and absences correctly classified as such; CCR). Notably the number of absenses (5441) dominates the presences (374) in the calculation of the CCR.
+
+
+For all tests, we built Maxent models (no expert map) and Minxent models with different expert omission rates to examine the effects of different levels of expert accuracy. The different levels of expert accuracy (1-ommission rate) were chosen as follows: 0.54, representing the estimated accuracy for the LELA data, 0.85, the approximate accuracy of expert maps based on GBIF data (Oetgui et al., pers comm.); 0.95, the likely upper limit of expert map accuracy). 
+
+
+\subsection{Smoothing boundaries}
+
+
+how do we get a reasonable prior? what?s important, what?s not important in terms of the curve?
+	
+	-address with 6x3 figure: of probs (col) and rate/skew/outdists in rows
+	
+		-leave NAs in figs that can?t achieve
+	
+	-could also have a fig of validation stats for all param combinations (only interesting ones in figs, colorized be validation stat so its easy to look at.
+
+
+We explored variation in predictions for the different choices of parameters describe in \ref{smooth} (Fig. xx).
+
+
+\textbf{Expert Accuracy} . We used all presence and expert data and examined how the expert map modified predictions between Maxent and Minxent. How do different levels or accuracy of the expert maps affect predictions? 
+
+
+We compared predictions that exclude the expert map from those that incorporate an expert map with different levels of confidence. The presence data suggest that the expert accuracy is 54\%, however we also consider cases where the expert accuracy is 70\% and 87\% to explore the effect on predictions (Fig.\ref{fig:lela_expert_preds}). 
+
+
+Figure \ref{fig:lela} shows predictions for a range of parameter combination. Maxent predictions (Fig. \ref{fig:lela}m) are clearly more diffuse than Minxent predictions. 
+
+
+\textbf{handling conflicting parameters} 
+
+i can imagine that if we estimate decay and \%in for 200 species
+
+
+that those with funny shape ranges with have conflict
+
+
+e.g. small range species are most likely an issue, if you think there's 90\% in, right?
+
+
+no, not necessarily
+depends more on the ratio of the size of the decay region relative to the size of the range, I think
+large ratio makes high p inside difficult
+high perimeter/area ratio
+in combination with slow decay
+
+
+for many thousands of species, where weird range shapes might become an issue,  fit the decay rat as a function of expert map area to avoid slow decays with small ranges.
+
+
+or area/perimeter or fractal something

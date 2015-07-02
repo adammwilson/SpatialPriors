@@ -1,0 +1,87 @@
+\section{Discussion}
+\label{sec:disc} 
+
+\textbf{Pros of using expert maps} 
+
+\begin{enumerate}
+  \item The biggest weakness of presence-only data is distinguishing absence from non-detection/non-searched. Expert maps are typically very good at defining absences beyond range boundaries, which complements PO data.
+  \item Can combine multiple expert maps; e.g. elevation. Have to distinguish which of these couldn't just be used as a covaraiate. I guess you don't need to fit a response to something you already know is binary. e.g.
+  \item 
+\end{enumerate}
+
+
+\textbf{Cons of using expert maps} 
+
+\begin{enumerate}
+  \item Expert maps probably have many false presences within the range boundaries. These get assigned the same prior probability as true presencese. So bias in expert maps carries forward to all subsequent predicitons
+  \item It's tough to figure out the right cumulative probability to assign to an expert map. One reasonable approach could be to assign a proportion equal to the proportion of observed presences inside the expert map (45\% in this example.) However, this approach suffers from (1) using the presences twice (as points in Maxent and in the expert map) and (2) that such presences could be extremely biased. For example, for observers may be more likely to report a species outside its expected distribution. Or observers may only look for species within its expected range if their study objective is something other than delineating range boundaries. 
+\end{enumerate}
+
+
+\textbf{What to do when you can't get the right prob inside} 
+
+\begin{enumerate}
+  \item adam's fig, at least in appendix. ref Fig 2.
+\end{enumerate}
+
+
+\textbf{Bayesian extensions} 
+
+\begin{enumerate}
+  \item benefits of uncertainty in priors?
+  \item If you go Bayesian it blurs the line between coef prior and spatial prior. (If the prior is a predictor, not spatial)
+  \item possible to weight priors and points differently? any ideas for good rule for this?
+  \item any neat ideas of how this could interact with spatial effects in hSDM?
+\end{enumerate}
+
+
+\textbf{Sampling Bias.} 
+
+Incorporating sampling bias in the presence data is conceptually straightforward in Minxent but requires a few additional steps. The steps depend upon whether one uses a continuous model of sampling/detection probability across the landscape or a discrete set of cells corresponding to sampled locations where the species was not detected. In the former case, (1) the sampling probability surface is multiplied by the expert map to obtain the prior; (2) the Minxent model is fit; (3) the prediction is multiplied by \emph{only} the expert prior, thereby factoring out the sampling bias. Details on this process for different applications of spatial priors is avalable in Merow et al. (in review). In the latter case, often called the 'samples with data' (SWD) format in the Maxent literature, one supplies Maxent with a set of background points with the same expected bias as the presence points, so that the sampling bias cancels out. Unfortunately, the Maxent software package is does not allow one to use both a prior and the SWD format in the same model. To work around this, one can create a 'mask' with a constant value at all sampled locations (e.g. 1) and NA at all other locations. This will force Maxent to sample background locations only from cells that are not NA. In order to project the map across the landscape, one must supply a raster with the same name as the mask layer in the 'Projection directory', which has a constant value in all cells where projection is desired and NA elsewhere. 
+
+
+\textbf{This isn't quite a niche model} 
+
+\begin{enumerate}
+  \item describe what coeffs mean. show where experts are wrong. 
+  \item You could build a niche model from our refinement if you were going to do that anyhow
+  \item  don?t project.
+\end{enumerate}
+
+
+\textbf{other sources of spatial information} 
+
+\begin{enumerate}
+	\item Discuss other non Expert priors (forest,  ecoregion). focus on coarse resolution stuff
+	\item Combining Priors is possible and easy. sampling bias (see Merow et al. in press).
+\end{enumerate}
+
+
+\textbf{When to use expert maps-The take home message} 
+
+\begin{enumerate}
+  \item Probably only when there are too few data points to work directly with the presence data
+  \item Possibly when the presences exhibit high bias (still checking this)
+  \item If you had higher than 95\% prob in the expert map, you probably can't learn much from a few presences. Or if you could, then 95\% prob is likely too high. Further, so much weight is assigned to the prior the data don't have much wiggle room.
+\end{enumerate}
+
+
+\textbf{Interacting with sampling bias} 
+
+\begin{enumerate}
+  \item Maybe this is too much of a detail, but this approach can deal with the sampling bias issue of dividing by near 0 when using a sampling prior
+  \item expert map put near zeros at potnetially unsampled locations that are surely absences
+  \item use the swd mask to allow either way of including sampling bias
+\end{enumerate}
+
+
+\textbf{R package} 
+
+\begin{enumerate}
+  \item would be nice to present this in a seperate software note if it's justified. Adam has lead this part an so should be first author... 
+  \item expertMapR? would be nice to have maxent in the name since it's not more general than that. although someday is could be...
+  \item minxentSDM?
+  \item considerable speed-ups for potentially slow spatial operations
+  \item modest number of functions for convenience
+  \item can interact with any way that you might choose to run maxent, since it only operates on the inputs and outputs (it doesn't run the models)
+\end{enumerate}

@@ -1,0 +1,13 @@
+Knowledge of species' ranges are critical for understanding ecological and evolutionary patterns at biogeographic scales. Range predictions are typically derived from expert knowledge or species distribution models that rely on observations of species presence (and sometimes absence). Expert maps are useful at coarse resolution and typically identify clearly unsuitable habitat. Point-level occurrence records enable associations between environmental variability and occurrence records, but often contain biases from several sources, particularly presence-only data from unstructured surveys. 
+Here, we show that the strengths of expert maps and presence-only data are complementary; occurrences can be used to make finer scale predictions, whereas expert maps primarily provide large scale absence data and interpolation between unsampled locations. In general, combining expert maps with point/grid data is critical when expert maps are coarse or occurrence data are sparse or may contain bias. A maximum entropy approach motivates the construction of our models, however we generalize this to point process models and provide an R package that integrates expert maps into standard generalized linear modeling software. We develop modeling strategies that flexibly accommodate expert maps with different levels of bias and precision.  The approach can also be useful with other coarse sources of spatially explicit information, including habitat associations, elevational bands, or vegetation types. 
+%Throughout, we emphasize decision making
+%Models are built with the Maxent modeling platform, incorporating spatially explict prior infomation (the expert map). 
+We illustrate decision making during model construction using a detailed case study of the Montaine Woodcreeper (\textit{Lepidocolaptes lacrymiger}) across South America and illustrate features more generally with applications to species with vastly different range/data attributes.
+
+%\textbf{Possibilities, those these might require a lot more work...}
+%\begin{enumerate}
+%  \item Application 1: Rare/poorly sampled species (too few presences to ignore expert map)
+%  \item Application 2: dispersal limited species (suitable environment elsewhere is inaccessible). partiticularly important when range s are small, which often means a rare species.
+%  \item Application 3: Determining biases in expert maps: e.g., where else should we look for rare species?
+%  \item We explore the generality of performance of Minxent for xx (100's) of known species distributions where occurrence records have been subsampled to simulate poor sampling. 
+%\end{enumerate}

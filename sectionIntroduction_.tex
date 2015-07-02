@@ -1,0 +1,55 @@
+\section{Introduction}
+
+
+\label{sec:Introduction} 
+
+\textbf{Broad Conceptual Questions} 
+
+Knowledge of species ranges allows biologists to address ecological and evolutionary problems that span topics from mitigating responses to global change to conservation plans to basic science (<- IMPROVE!). Our understanding of the geographic distributions most species is relatively limited, with the exception of a few well studied taxononmic groups. Improving our understanding and predictions of species ranges is faced with with a number of practical challenges. First, researchers must overcome the bias inherent in many presence data sets - typically due to unstructured surveys or variability in detection - which leads to misleading range predictions \citep{Phillips:2009wp}. Second, small sample sizes abound, particularly for rare or cryptic species or poorly studied taxonomic groups. Sparse sampling may be coupled with strong sampling bias. Third, because these issues are species-specific, it is unclear how to produce high-quality range maps for a large number of species simultaneously. But large databases describing species distributions are critical for understanding biogeographic and phylogenetic patterns. Although higher quality data would be preferable, current rates of global change demand immediate predictions of biogeographic patterns. As data sets improve, simultaneous methodological advances are needed to take advantage of existing data sets, while recognizing limitations of the data.
+
+
+\fxnote{GENERALIZE THIS TO OTHER SOURCES OF SPATIAL INFO}
+
+
+\textbf{Methods questions} 
+
+Reliably predicting species ranges is limited partly by data availability and partly by methods that make the most of available data. We need unbiased information on species presence, or information on the nature of the bias to build reliable species distribution models (SDMs). But it can be difficult to sensibly extrapolate, or even interpolate, SDMs in environmental and geographic space \citep{Merow:2014hw} MORE.  Absence information is advantageous, but this is more difficult to obtain systematically. Expert maps can address this limitation to some extent; they characterize absences across large extents and coarse resolution, but they tend to predict false presences inside, and near the boundaries of the large polygons that constitute them. However, the assets of each data type are complementary; expert maps help to focus effort on where to refine our understanding of interpolation while avoiding erroneous extrapolation. Presence observations help to refine the predictions of an expert map to predict variation in habitat suitability at higher spatial resolution. Here, we develop modeling strategies for formally integrating expert maps with presence-only data to address the following methodological questions:
+\begin{enumerate}
+  \item How can we incorporate expert maps with different levels of detail or accuracy to constrain occurrence models?  \fxnote{COULD REFRAME THIS AS 'REFINE EXPERT MAPS'}
+  \item Can expert maps help to reduce biased extrapolation in occurrence models?
+  \item Can occurrence data reduce false presences predicted inside expert `blobs'?
+  %\item If occurrence models are constrained with expert maps, can we still detect larger distributions beyond the expert map boundaries?
+  \item By combining data types, can we reduce prediction uncertainty, particularly for small sample sizes?
+\end{enumerate}
+
+
+\textbf{Why not just use the expert map?} 
+
+Although valuable across large spatial extents and coarse spatial resolutions \citep{Hurlbert:2007bh}, expert maps have a number of weaknesses that can be compensated for by occurrence data. Expert maps tend to be contiguous 'blobs' that predict many false presences due to smaller scale features of the landscape. For rare or cryptic species, they might miss new, disjunct parts of the distribution that have not yet been detected, which is particularly critical. In contrast, by identifying occurrence-environment relationships, SDMs can predict environmentally similar locations, which may be disjunct in geographic space. Expert maps provide only binary, or occasionally ordinal predictions, although all parts of a species range are not equally suitable. In contrast, SDMs can predict continuous variation in habitat suitability. Expert maps may contain bias if they are based on topography or vegetation type, rather than experience in the field, whereas SDMs are based on direct observation. Finally, a recent analysis of GBIF data (for xx birds, reptiles, amphibians and mammals), perhaps the largest single collection occurrence data, found that only 82\% of presence records fell within expert maps; hence expert maps may be refined considerably (Otegui et al., pers.com.).  \fxnote{PERHAPS SOME MORE HERE ON WHAT CAN BE DONE WITH EXPERT MAPS, E.G. COARSE GRAIN SDMS \& PROJECTIONS.}
+
+
+\textbf{Why not just use the occurrence data?} 
+
+Although occurrence data are valuable for identifying occurrence-environment relationships, they have a number of weaknesses that can be compensated for by expert maps. Most importantly, occurrence records may be biased in environmental space. This bias is impossible to detect from presence data alone; absences are needed \citep{Merow:2013tg,Merow:2014hw}. For poorly sampled species, one cannot disentangle absence from nondetection or unsampled areas. Small samples may contain considerable bias, because they may result from efforts focused on smaller spatial extents than the species entire range. These challenges are compounded for rare or cryptic species, where detection may be low or targeted search efforts are used to increase the probability of detection. In contrast, expert maps are likely to be less spatially biased because they are often the cumulative result of more comprehensive sampling based on the expert's field experience. In presence only models, selection of the 'background' locations that are compared against the presences is often somewhat arbitrary (e.g. based on political boundaries or rectangles with convenient size) selection can have a drastic influence on predictions \citep{Merow:2013tg} (WE DON't REALLY ADDRESS THIS IN THIS PAPER). Expert maps provide weights that control for the impact of background and can downweight locations with trivial absences that are far from the range boundaries to place more emphasis on model fitting in more critical portions of geographic space. In SDMS, it is difficult to fit appropriate functional forms of occurrence-environment relationships \citep{Merow:2014hw}, which can lead to unreasonable projections beyond range boundaries. Expert maps can help to 'tie down' predictions beyond range boundaries to produce more sensible predictIons. Finally, there are other factors besides environment that affect species ranges, but which are often omitted from SDMs. In contrast, expert maps can reflect the outcomes of, e.g,. competition, local extirpation, or dispersal limiation to improve predictions of realized distributions. 
+
+
+\textbf{why is this especially useful for certain applications (include here?)} 
+
+\begin{enumerate}
+  \item both data type are bad at range boundaries. expert maps/boundaries are coarse res. occurrence have lower prob of occurrence and maybe lower detection. refining these requires every bit of info.
+  \item Most occurrence data are presence-only, which can be particularly problematic when inferring range boundaries. Expert maps can provide absence information. Paricularly important when only a portion of the distribution is observed (bias). Can't really say absence, because we're not using as such.
+  \item its possible that there are suitable environments that are quite small, so downscaling is useful
+  \item scaling up for many species
+  \item dealing with poorly sampled species
+  \item Rare/endagered species, where the expert map may be pretty good, but looking for new populations based on similar environment
+  
+\end{enumerate}
+
+
+\textbf{why maxent and spatial priors} .
+A maximum entropy modeling approach, which underlies the popular Maxent software package \citep{Phillips:2006vf} is useful for combining expert maps with presence only data (CITE OTHER MEROW PAPER?). Maxent is so-named because it maximizes the similarity (measured as the relative entropy) between a prior distribution and the prediction. The prior represents the modeler's prior expectation of the species distribution in geographic space; this is typically taken to be a uniform distirbution to imply that the species is equally likely to be anywhere. However, ecologists are rarely so ignorant about a species' disitrbution. Expert maps are available for many plant and animal species and in many cases may reflect better (BETTER THAN WHAT? POINT DATA?) assumptions about a species' distribution. Maxent has recently been extended to include such sources of spatially explicit information in the form of rasters that describe the output of other quantitative or conceptual models. (Merow et al., in review). Here, we develop strategies for using Maxent models that maximize the similarity to expert maps. Conceptually, this corresponds to 'updating' or 'refining' the expert map, conditional on the presence data. Techincal details are below. 
+
+
+\textbf{What we do here} 
+
+The remainder of the paper is organized as follows: in \nameref{sec:Model} we discuss how to incorporate spatially explicit prior information (expert maps) into Maxent and methods for handling different types of expert maps. In \nameref{sec:lela}, we illustrate how predictions are affected by different types of model specification or bias.  (2) (MAYBE) We consider larger scale study of Minxent's predictive performance across x00 species. We conclude with a discussion of the the strengths and weaknesses of our approach and a prospectus on the applications where it will be most valuable.

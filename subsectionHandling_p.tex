@@ -1,0 +1,30 @@
+\subsection{Handling potential biases}
+In order to assess the ability of Minxent to combine expert maps with presence data, we explored scenarios in which different types of bias might exist in either data set.  Biased presences, Biased presences, Small sample size ->unknown bias.
+
+
+\subsubsection{Biased presences}%----------------------
+
+
+We simulate extreme bias by omitting presences from the southern portion of the range from model fitting. Can expert maps improve predictions in portions of the range where the species is not detected?
+
+
+To see how Minxent responds to a biased sample of presences, we removed all presences from the (1) southern portion of the range (< -5 degrees); (2) northern portion of the range (>5 degrees); (3) middle portion of the range (< -5  and <5 degrees); (4) northern and southern portion of the range (< -5 degrees or > 5 degrees);  from the fitting data. 
+
+
+\textbf{Results} . If the expert map is poor (i, where only 54\% of presences are assumed inside) predictions are more diffuse. However, this prediction is still superior to the Maxent model that ignores the expert map with the same predictions threshold (95\%; panel d). With better expert maps (j-l) predictions are improved.
+
+
+\subsubsection{Biased expert map}
+We simulate bias by omitting a portion of the range from model fitting. How do presence points beyond expert boundaries influence predictions?
+
+
+To explore how Minxent would handle a scenario in which the expert map exhibits significant bias, we removed a large portion of expert map from model fitting. We wanted to explore what patterns of presences are needed to overrule a biased expert map. We tested three scenarios: removing the large southern portion of the range, including only the southern portion of the range (i.e., omitting the 4 north-most blobs), and omitting the large central blob (leaving only the large southern blob and the three small northern ones). In general, it is apparent that even when a large portion of the expert map is omitted from model fitting, the presence points were capable of driving the prediction. In all cases tested, the CCR and TNR was higher for Minxent models than the Maxent models with the same prediction threshold. The higher CCR and TNR of Minxent models was paired with only slightly lower TPR in all cases. Predictions are shown for the case where the large southern blob was ommitted from the expert maps in Fig \ref{fig:lela_biased_expert_prior_no_south_preds_temp}; more detailed and qualitatively similar predictions are shown for all tests in Appendix \ref{app:biased_expert}.
+
+
+\subsubsection{Sample Size}
+
+
+Similarity of prior to posterior vs n points. Start low then plateau. Should have high uncertainty in the middle
+
+
+a similar plot of performance on y axis could show the sweet spot for using our method though we can't really generalize. 

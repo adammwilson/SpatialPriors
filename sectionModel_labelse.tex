@@ -1,0 +1,85 @@
+\section{Model}
+\label{sec:Model} 
+
+\textbf{General} 
+
+We begin with a brief background on how Maxent fits models; the details of Maxent are treated at length elsewhere (Phillips:2006vf,Elith:2011vz,Halvorsen:2012er,Merow:2013tg), as is its extention to including spatially explicit prior information (Merow et al., in review). 
+Maxent contrasts the environmental conditions at presence locations against those at background locations (i.e. the collection of cells on the landscape considered to be available to the species), irrespective of whether the locations were sampled. Using these, Maxent predicts the relative occurrence rate (ROR) in cells across a landscape. In the present application, it is most useful to interpret these RORs as a multinomial distribution in geographic space, where the probabilities describe which cells are most likely to contain a presence \citep{Merow:2013tg}. ROR sums to unity across all cells in the landscape, so cells with low ROR may still have a high absolute probability of presence, but have lower relative probability than other cells in the landscape. This ROR is Maxent's so-called \emph{raw output}. Importantly, we do not consider the logistic transformation of Maxent's output \citep[cf. ][]{Phillips:2008uk} due to the many issues that have been raised with it \citep{Royle:2012vt,Merow:2013tg}, but rather focus on raw output.
+
+
+A prior distribution, in this case the expert map. reflects information about the species distribution that is independent of the individual occurrence records. By default, Maxent uses a prior that is uniform in geographic space, which means that,  \emph{a priori}, we believe that the species is equally likely to be found anywhere in the landscape. To fit a model, Minxent produces a prediction that is maximally similar to the prior distribution (measured by Kullback-Leibler divergence, a.k.a. cross entropy) while obeying constraints imposed by the presence data (Phillips et al. 2006). We minimize, instead of maximize, the cross entropy because it is defined with the opposite sign of the entropy, hence we refer the fitting procedure as 'Minxent' (minimum cross entropy).
+
+
+Minimizing the cross entropy of the predicted distribution turns out to be equivalent to maximizing the following log-likelihood (known as Maxent's gain function) \citep{Dudik:2004tc, Phillips:2006vf, Merow:2013tg}:
+
+
+\begin{equation}
+  \label{eq:Lik}
+		gain(\boldsymbol\lambda)=\frac{1}{m} \sum_{i=1}^{M} \mathbf{z}(x_i)\boldsymbol\lambda -log\sum_{i=1}^{N}Q(x_i)e^{\mathbf{z}(x_i)\boldsymbol\lambda} -  \sum_{j=1}^{J} |\lambda_{j}|\beta \sqrt{s^2 (z_j)/M}
+\end{equation}
+
+
+Here, $M$ is the number of presence locations, $\mathbf{z}(x_i)$ denotes the vector (length $J$) of environmental predictors in cell $x_i$, $\boldsymbol\lambda$ is a vector of fitted coefficients, $N$ is the total number of cells, $Q(x_i)$ is the prior distribution, $\beta$ is a regularization coefficient and $s^2 [z_j]$ is the variance of the $j^th$ feature. The first term on the right hand side represents the likelihood at presence locations, the second term represents the likelihood at background locations and the third term is a penalty function to used to avoid overfitting. The key component for the present application is the the second term, where $Q(x_i)$ weights the contribution of cell $x_i$ to the background likelihood.  The gain function increases for choices of coefficients that attribute high likelihood to presence locations (first term) but decreases if those coefficients also assign high likelihood to background locations (second term). Hence Minxent is attempting to differentiate the presences from the background, by choosing the right set of coefficients. Compared to a uniform prior, locations inside the expert range map receive higher weights that those outside. Hence, using the expert map prior forces model fitting to focus on resolving differences in ROR \textit{within the expert map}. 
+
+
+Let $P^*(\mathbf{z}(x_i))$ represent the distribution we aim to predict, describing the ROR in each cell, and Minxent's prediction then takes the following form: 
+	\begin{equation}
+	\label{eq:solution}
+		P^*(\mathbf{z}(x_i))=Q(x_i)e^{\mathbf{z}(x_i)\boldsymbol\lambda}/C
+	\end{equation}
+where $C$ is a constant that ensures normalization. Because this model is multiplicative, a low value in the prior distribution (outside the expert map) likely implies a low value in the predicted distribution unless the environment is extremely favorable ($\mathbf{z}(x_i)\boldsymbol\lambda$ is large). We can think of the term $\mathbf{z}(x_i)\boldsymbol\lambda$ as updating the expert map. The coefficients of the model ($\boldsymbol\lambda$) thus describe the environmental covariates that differentiate the expert map from the occurrence data, i.e. the environmental bias in the expert map.
+
+
+\begin{enumerate}
+  \item possibly explain in terms of background sample like SWD.
+  \item equivalence of biased background and a sampling surface. Explain in terms of sampling bias (familar) and extend to expert ranges
+\end{enumerate}
+
+
+\textbf{Connection to PPMs} 
+
+\begin{enumerate}
+  \item While the motivation for using a spatially explicit prior comes from Maxent, the connection to inhomogeneous point process models \citep[PPMs; cf.][]{Warton:2010cc, Chakraborty:2011uw, Fithian:2013us, Renner:2013hf} considerably simplifies model implementation. PPMs are... and can built with standard software for generalized linear models 
+  \item offset; use this throughout. analogy to exposure. e.g. sampling bias. (amw: or what about a prior ROR?   PROR? P-ROR? or something?  Seems to me some meaning is lost when we just call it an offset)
+  \item offset is a predictor with coef==1. so its useful to set when the point data might be insufficient to detect the relationship, though we have confidence in its existence. But a Bayesian modeling apporach softens this assertion; we can incorporate uncertainty in the offset by specifying a distribution for it. 
+  \item For further details on the statistical connection between Maxent and PPMs see Merow et al. in press(?).
+\end{enumerate}
+
+
+\subsection{Defining the offset}
+\label{smooth} 
+
+The practice of quantifying prior belief into a statistical distribution is refered to as ``prior elicitation'' (Dey, Dipak K., and Junfeng Liu. 2007. <U+201C>A Quantitative Study of Quantile Based Direct Prior Elicitation from Expert Opinion.<U+201D> Bayesian Analysis 2 (1): 137<U+2013>66. doi:10.1214/07-BA206.).  A number of considerations are important when converting a binary expert range polygon into a quantitative gridded representation needed for this modelling framework.  While we focus here on applications with expert maps, we note that these approaches apply generally to other sources of a spatial information (see \ref{sec:disc}). 
+The interpretation of this 'prior ROR' (PROR) surface is also a multinomial distribution in geographic space and must be specified in terms of an ROR; its values must sum to unity and zeros are not allowed (but missing data are acceptable).  In other words, if you asked the expert where she would expect the next occurrence record to be found,  the PROR values represent the probability the expert would select each cell, e.g. $P(X|Y=1)$.
+
+
+The key consideration in defining the PROR is how much probability to put inside the expert map ($P_{in}=\sum\nolimits_{x \in range} PROR_x$), and how much to assign outside (assuming the expert map is binary). Varying these probabilities directly affects the relative `strength' of the prior information in the resulting predictions and can range from $P_{in}$ approaching 100\%  (assuming a very accurate expert map) to a `flat' PROR in which $P_{in}$ is simply the ratio of the range area to the modelling domain area (assuming that occurences are just as likely inside vs. outside the range map).  
+One way to assign $P_{in}$ is based on omission rates (the proportion of observed presences outside the expert map). If we take $r$ as the ommission rate for an expert map with $m$ cells inside the map and $n$ cells outside the map, one can assign cells inside the map a prior value of $(1-r)/m$ and values outside the expert map as $r/n$. Ideally, estimating ommission rate would be done with an independent data set to avoid using the same presence data to estimate the expert omission rate as is used in the model. For example, one could use the ommission rate for a larger taxonomic group from the same expert map source. If this is not possible, it is still reasonable to use the same presense points for both expert omission and Minxent, because the expert map is based on geographic space while Minxent is fit in environmental space. A possible consequence of this is ...? When the expert omission rate can be accurately estimated, Minxent's predictions can be interpreted on their natural, continuous scale.  
+
+
+The second consideration in defining the PROR is the shape of the transition from 'inside' to outside' the expert range.  The simplest approach is a step-function which drops abruptly at the range boundary.  However, the spatial resolution of expert range maps are typically much coarser (Hurlbert, Allen H., and Walter Jetz. 2007. <U+201C>Species Richness, Hotspots, and the Scale Dependence of Range Maps in Ecology and Conservation.<U+201D> Proceedings of the National Academy of Sciences 104 (33): 13384<U+2013>89. doi:10.1073/pnas.0704469104.) than the modelling resolution of the SDM. In most cases, a smooth decay is more representative of the continuously decreasing probability of finding the species at locations further from the expert range.  We suggest that a 5-parameter generalized logistic curve is sufficient to provide smoothed expert boundaries due to the flexibility it offers and the biological interpretability of parameters  (Richards, F. J. 1959. <U+201C>A Flexible Growth Function for Empirical Use.<U+201D> Journal of Experimental Botany 10 (2): 290<U+2013>301. doi:10.1093/jxb/10.2.290):
+
+
+\begin{equation}
+PROR_x = (u - { u-l \over (1 + e^{-r(x - s)})^{1 / k} })C^{-1}
+\end{equation}
+
+
+A biological and statistical understanding of the connections between these parameters helps to define useful priors (Figure \ref{fig:logistics}). The rate ($r$) affects the overal decay rate from a step function to flat surface. The skew ($k$) adjusts the symetry of the decay and ranges from a symetrical logistic curve to shifting most of the decay outside the expert range (so the probability remains high to the boundary and before decaying).  The  shift ($s$) slides the curve in or out of the expert range to adjust the location but not the shape of the decay.  In this study we do not adjust this term.  $C$ is a normalization constant.\fxnote{Do we need to mention this here and include in formula?}   After specifying the shape of the curve ($r$, $s$, and $k$), the final two parameters, the upper ($u$) and lower ($l$) asymptotes, are selected via numerical optimization to achieve the desired $P_{in}$ for a particular range and modelling domain. 
+
+
+These parameters can have considerable effects on predictions and must be estimated based on inferred attributes of the expert maps. By using a `target group' of related species described by the same source of expert maps, it is possible to fit these parameters, however we anticipate that these parameters will often be set \emph{a priori} based on an understanding of the expert maps, as we do in the following examples.  Range and domain geometries impose critical constraints on reasonable combinations of these parameters. Feasible curves can be evaluated by assessing whether it is possible to achieve the desired probability inside the range given a particular decay curve (Figure fig:logistics).  For example, it is paradoxical to select both a high probability inside the expert range ($P_{in}$) and a very slow decay ($r$) that puts significant probability outside the range.   
+
+
+\textbf{Additional points to possibly add:} 
+
+\begin{enumerate}
+  \item could fit source-dependent decay function
+  \item Doesn't need to be be super precise if you're in the position to have a crappy expert map and not enough points to ignore the expert map.
+  \item but i think conceptually, you'd do one or the other; low prob inside the real expert map or higher prob inside the smoothed one
+  \item with well-defined environmental niches or careful polygons, the expert range could be pretty tight.we just have no way to know
+  \item does this mean that buffering is the safest way
+  \item doing the smoothing is conceptually like extending the expert maps so there's mor probability inside it. if the expert map is bad, there should be less prob inside the prior, so the data should have no problme smoothing that edge.
+its only when we have high prob in the expert map and and no smoothing that we get an abrupt drop at the edge, which would not be  not too sensitive to data
+  \item and if the background is huge, this won't be an issue. but if you clip real close to the expert map, you probably shouldn't be using the expert map. so it's just the intermediate case that we need to worry about.
+\end{enumerate}
