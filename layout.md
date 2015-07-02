@@ -1,5 +1,4 @@
 abstract.tex
-fxsetuplayoutfootnot.tex
 sectionIntroduction_.tex
 sectionModel_labelse.tex
 figures/Figure1/Figure1.png
