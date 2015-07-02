@@ -2,7 +2,7 @@ abstract.tex
 fxsetuplayoutfootnot.tex
 sectionIntroduction_.tex
 sectionModel_labelse.tex
-figures/Figure1/default_figure.png
+figures/Figure1/Figure1.png
 sectionCase_study_la.tex
 figures/lela_expert_preds_v4_1/default_figure.png
 subsectionHandling_p.tex
